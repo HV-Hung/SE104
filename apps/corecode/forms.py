@@ -3,7 +3,7 @@ from django.forms import ModelForm, modelformset_factory
 
 from .models import SiteConfig, AcademicTerm, AcademicSession, StudentClass, Subject
 from apps.students.models import Student
-SiteConfigForm = modelformset_factory(SiteConfig, fields=('key', 'value',), extra=0)
+SiteConfigForm = modelformset_factory(SiteConfig, fields=('key', 'value'), extra=0)
 
 class AcademicSessionForm(ModelForm):
   prefix = 'Academic Session'

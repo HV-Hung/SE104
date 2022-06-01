@@ -12,7 +12,7 @@ def default_site_config(apps, schema_editor):
     Config.objects.bulk_create([
         Config(key='school_name', value='SUDO High School'),
         Config(key='school_slogan', value='A great school'),
-        Config(key='school_address', value='Ho Chi Minh'),
+        Config(key='school_address', value='Thu Duc, Ho Chi Minh'),
     ])
 
     Session = apps.get_model('corecode', 'AcademicSession')
@@ -39,11 +39,13 @@ def default_site_config(apps, schema_editor):
     StudentClass.objects.bulk_create([
         StudentClass(name='10A1'),
         StudentClass(name='10A2'),
+        StudentClass(name='10A3'),
+        StudentClass(name='10A4'),
         StudentClass(name='11A1'),
         StudentClass(name='11A2'),
+        StudentClass(name='11A3'),
         StudentClass(name='12A1'),
         StudentClass(name='12A2'),
-
     ])
     
 

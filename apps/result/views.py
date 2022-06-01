@@ -61,7 +61,9 @@ def add_score(request):
     if 'finish' in request.POST:
       form = EditResults(request.POST)
 
-      if form.is_valid():
+      if form.is_valid() == False:
+        messages.warning(request, 'The form has invalid values')
+      else: 
         form.save()
         messages.success(request, 'Results successfully updated')
         return redirect('view-results')
@@ -89,8 +91,9 @@ def edit_results(request):
 
   if request.method == 'POST':
     form = EditResults(request.POST)
-
-    if form.is_valid():
+    if form.is_valid() == False:
+      messages.warning(request, 'The form has invalid values')
+    else:
       form.save()
       messages.success(request, 'Results successfully updated')
       return redirect('edit-results')
@@ -114,12 +117,12 @@ def all_results_view_class(request):
     for subject in results:
       if subject.student == result.student:
         subjects.append(subject)
-        subject.test_score = float(subject.test_score)
-        subject.exam_score = float(subject.exam_score)
-        test_total = (test_total + subject.test_score)
-        exam_total = (exam_total + subject.exam_score)
-    test_total = test_total / len(subjects)
-    exam_total = exam_total / len(subjects)
+        subject.test_score = round(float(subject.test_score), 2)
+        subject.exam_score = round(float(subject.exam_score), 2)
+        test_total = round((test_total + subject.test_score), 2)
+        exam_total = round((exam_total + subject.exam_score), 2)
+    test_total = round(test_total / len(subjects), 2)
+    exam_total = round(exam_total / len(subjects), 2)
     bulk[result.student.id] = {
       "student": result.student,
       "subjects": subjects,

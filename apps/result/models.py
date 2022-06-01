@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from apps.corecode.models import AcademicSession, AcademicTerm, StudentClass, Subject
 from apps.students.models import Student
@@ -25,8 +26,12 @@ class Result(models.Model):
   term = models.ForeignKey(AcademicTerm, on_delete=models.CASCADE)
   current_class = models.ForeignKey(StudentClass, on_delete=models.CASCADE)
   subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-  test_score = models.FloatField(default=0,verbose_name="điểm KT45'")
-  exam_score = models.FloatField(default=0,verbose_name="điểm KT15'")
+  mark_validator = [MinValueValidator(0, "value must be greater than or equal 0"),
+                    MaxValueValidator(10, "value must be less than or equal 10")]
+  test_score = models.FloatField(default=0, verbose_name="điểm KT45'", validators=mark_validator)
+  exam_score = models.FloatField(default=0, verbose_name="điểm KT15'", validators=mark_validator)
+
+  final_mark = 0.0
 
   class Meta:
     ordering = ['subject']
@@ -35,7 +40,10 @@ class Result(models.Model):
     return f'{self.student} {self.session} {self.term} {self.subject}'
 
   def total_score(self):
-    return (self.test_score + self.exam_score)/2
+    tmp_mark = round((self.test_score + self.exam_score) / 2, 2)
+    if tmp_mark > 0:
+      self.final_mark = tmp_mark
+    return self.final_mark
 
   def grade(self):
     return score_grade(self.total_score())
